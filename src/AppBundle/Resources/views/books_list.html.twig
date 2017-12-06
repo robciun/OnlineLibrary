@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Book list {% endblock %}
+
+{% block body %}
+    {% set no = 1 %}
+    <h2 class="book-name"></h2>
+
+    <div class="book-container">
+        <div class="book-photo"></div>
+            <div class="book-details">
+            <dl class="book-details-list">
+            {% for book in book_list %}
+                <tr>
+                    <dt>Title</dt>
+                    <td>{{ book.title }}</td>
+                    <dt>Author</dt>
+                    <td>{{ book.author }}</td>
+                    <dt>Release year</dt>
+                    <td>{{ book.releaseYear|date }}</td>
+                    <dt>Language</dt>
+                    <td>{{ book.language }}</td>
+                    <dt>Pages number</dt>
+                    <td>{{ book.pagesNumber }}</td>
+                </tr>
+                {% endfor %}
+                {% for note in book_notes %}
+                <tr>
+                    <dt>Note</dt>
+                    <td>{{ note.note }}</td>
+                </tr>
+                {% endfor %}
+            </dl>
+        </div>
+    </div>
+
+    <div id="js-notes-wrapper"></div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.3/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.3/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+
+    <script type="text/babel" src="{{ asset('js/notes.react.js') }}"></script>
+    <script type="text/babel">
+        var notesUrl = '{{ path('book_notes', {'entityId': entityId}) }}';
+
+        ReactDOM.render(
+                <NoteSection url={notesUrl} />,
+            document.getElementById('js-notes-wrapper')
+        );
+
+    </script>
+{% endblock %}
